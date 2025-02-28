@@ -14,7 +14,7 @@ def send_email(subject, content):
     username = os.getenv("username")  # SendGrid username is usually 'apikey'
     password = os.getenv("password")  # Replace with your SendGrid API Key
     sender_email = os.getenv("sender_email")  # Verified sender in SendGrid
-    receiver_email = os.getenv("receiver_email") # The recipient's email address
+    receiver_email = os.getenv("receiver_email") # The recipient's email address 
 
     # Create email message
     msg = EmailMessage()
