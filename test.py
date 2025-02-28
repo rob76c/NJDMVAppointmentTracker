@@ -1,13 +1,13 @@
 from datetime import datetime, date
 from bs4 import BeautifulSoup
-from slack_sdk import WebClient
-from slack_sdk.errors import SlackApiError
 from time import sleep
 import urllib.request
 import argparse
 import pandas as pd
+import sys
 
 import crawler as config
+from h import send_email
 
 # Define target date
 TARGET_DATE = date(2025, 5, 28)
@@ -225,34 +225,41 @@ if __name__ == "__main__":
         new_urls = urls.difference(daily_found_urls)
         daily_found_urls = daily_found_urls.union(urls)
         
-        if len(new_urls) > 0:
-            new_slots = {url: available_slots[url] for url in new_urls}
-            # Create DataFrame
-            df_data = [{
-                'Location': slot['location'],
-                'Date': slot['date'],
-                'Time': slot['time'],
-                'Type': slot['type'],
-                'URL': url
-            } for url, slot in new_slots.items()]
-            
-            df = pd.DataFrame(df_data)
-            # Sort and format for better display
+        # if len(new_urls) > 0:
+        new_slots = {url: available_slots[url] for url in new_urls}
+        # Create DataFrame
+        df_data = [{
+            'Location': slot['location'],
+            'Date': slot['date'],
+            'Time': slot['time'],
+            'Type': slot['type'],
+            'URL': url
+        } for url, slot in new_slots.items()]
+        
+        df = pd.DataFrame(df_data)
+        if not df.empty:
+        # Sort and format for better display
             df['Date'] = pd.to_datetime(df['Date'])
             df = df.sort_values(['Date', 'Time', 'Location'])
             df['Date'] = df['Date'].dt.strftime('%Y-%m-%d')
             
-            print("\nNew Appointments Found:")
-            print(df[['Location', 'Date', 'Time']].to_string(index=False))
-            print("\n")
+            email_subject = ("New Appointments Found:")
+            email_body = "\nNew Appointments Found: \n\n" + (df[['Location', 'Date', 'Time']].to_string(index=False))
+           
+           #Send email
+            send_email(email_subject, email_body)
+            print("Email Sent!")
+        else:
+           print ("No new appointments found.")
+           sys.exit(1)
             
             # if ARGS.slack:
                 # _send_slack_message(f"New appointments found:\n{df[['Location', 'Date', 'Time']].to_markdown(index=False)}")
         
-        sleep(10)
-        current_date = datetime.today().strftime("%Y-%m-%d")
-        if current_date != former_date:
-            print("Passing one day, resetting the daily found urls and slot count...")
-            former_date = current_date
-            daily_found_urls.clear()
-            slot_count.clear()
+        # sleep(10)
+        # current_date = datetime.today().strftime("%Y-%m-%d")
+        # if current_date != former_date:
+        #     print("Passing one day, resetting the daily found urls and slot count...")
+        #     former_date = current_date
+        #     daily_found_urls.clear()
+        #     slot_count.clear()
