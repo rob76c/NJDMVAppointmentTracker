@@ -1,6 +1,6 @@
 # NJDMVAppointmentTracker
 
-Tracks appointments for NJ DMVs specifically for the RealID.
+Tracks appointments for NJ DMVs
 
 ## Overview
 
