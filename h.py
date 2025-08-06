@@ -11,7 +11,7 @@ def send_email(subject, content):
     # Configuration
     smtp_server = "smtp.sendgrid.net"
     port = 587  # For TLS: 587, For SSL: 465
-    username = os.getenv("username")  # SendGrid username is usually 'apikey'
+    username = os.getenv("key")  # SendGrid username is usually 'apikey'
     password = os.getenv("password")  # Replace with your SendGrid API Key
     sender_email = os.getenv("sender_email")  # Verified sender in SendGrid
     receiver_email = os.getenv("receiver_email") # The recipient's email address 
