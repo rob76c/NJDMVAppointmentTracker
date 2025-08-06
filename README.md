@@ -25,7 +25,7 @@ This project leverages Python and the free Twilio SendGrid API to manage appoint
 Create a file named `.env` in the root directory of your project with the following contents:
 
 ```ini
-username=apikey
+key=apikey
 password=SG.yourpassword
 sender_email=youremail@whateveremail.com
 receiver_email=recieveremail@whateveremail.com
